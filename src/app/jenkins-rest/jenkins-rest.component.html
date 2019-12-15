@@ -1,0 +1,14 @@
+<button type="button" class="btn btn-primary" (click)="fireJenkins()">Primary</button>
+
+<div class="container-fluid">
+  <div #viewOnEvent *ngFor="let jenkinsJob of allJenkinsJobs;" id="div-jenkins-job-{{jenkinsJob.name}}">
+    <div class="row">
+      <button type="button " class="top-buffer" id="button-jenkins-job-{{jenkinsJob.name}}"
+        (click)="showConnectOnClick($event)">
+        {{jenkinsJob.name}}
+        <!-- <p> {{jenkinsJob.color}}</p>
+          <p> {{jenkinsJob.url}}</p> -->
+      </button>
+    </div>
+  </div>
+</div>

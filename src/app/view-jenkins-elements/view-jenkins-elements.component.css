@@ -1,0 +1,19 @@
+.wider{
+    width: 100%;
+}
+
+ul {
+    width: 90%;
+}
+
+ul > li > button {
+    margin-left: 6px;
+}
+
+.row {
+    margin-top: 2%;
+}
+input{
+    text-align:center;
+}
+

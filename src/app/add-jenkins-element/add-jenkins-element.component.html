@@ -1,0 +1,29 @@
+<div class="jumbotron" *ngIf="!inProcessOfAddingJenkinsView">
+    <h1 class="display-4">Multiple jenkins view</h1>
+    <p class="lead">Manage multiple jenkins jobs withe multiple internal depndencies</p>
+    <hr class="my-4">
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" (click)="inProcessOfAddingJenkinsView=!inProcessOfAddingJenkinsView"
+            role="button">Add Jenkins view</a>
+    </p>
+</div>
+
+<div class="jumbotron" *ngIf="inProcessOfAddingJenkinsView">
+    <form (ngSubmit)="addJenkinsView(f)" #f="ngForm">
+        <div class="form-group">
+            <label for="urlInput">Jenkins url</label>
+            <input name="url" type="text" class="form-control" id="urlInput" aria-describedby="urlHelp"
+                placeholder="Jenkins Url" ngModel>
+            <small id="urlHelp" class="form-text text-muted">Enter the url of the Jenkins view</small>
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input name="username" type="text" class="form-control" id="username" placeholder="Username" ngModel>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput">Password</label>
+            <input name="password" type="password" class="form-control" id="passwordInput" placeholder="Password" ngModel>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

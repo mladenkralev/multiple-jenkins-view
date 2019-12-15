@@ -1,0 +1,7 @@
+<app-header [jenkinsNumber]="registeredJenkinsUrls.length"></app-header>
+
+<app-add-jenkins-element *ngIf="registeredJenkinsUrls.length == 0" (jenkinsAdded)="onJenkinsAdded($event)">
+</app-add-jenkins-element>
+
+<app-view-jenkins-elements *ngIf="registeredJenkinsUrls.length > 0" [registeredJenkinsUrls]="registeredJenkinsUrls">
+</app-view-jenkins-elements>
