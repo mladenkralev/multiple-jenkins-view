@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core
 import { JenkinsJob } from '../models/jenkins.job.element.model';
 import { JenkninsElement } from '../models/jenkins.element.model'
 import { jsPlumb, jsPlumbInstance } from 'jsplumb';
+import { NodeService } from './nodes-container/node/node.service';
 
 @Component({
   selector: 'app-pipeline-creator',
@@ -18,58 +19,39 @@ export class PipelineCreatorComponent implements OnInit {
   souceClicked: boolean = false;
   lastRemembered: string = ''
 
-  constructor() {}
+  nodes = [];
+  connections = [];
+
+  constructor(private nodeService: NodeService) { }
 
   ngOnInit() { }
 
-  ngAfterViewInit() {
-    this.things.changes.subscribe(t => {
-      this.ngForRendred();
-    })
-    this.jsPlumbInstance = jsPlumb.getInstance();
-  }
-
-  showConnectOnClick(event: Event) {
-    console.log("Clicking on button " + event.target);
-    this.jsPlumbInstance.recalculateOffsets(<HTMLInputElement>event.currentTarget);
-
-    let current = (<HTMLInputElement>event.currentTarget).id;
-    if (this.souceClicked) {
-      this.connectSourceToTargetUsingJSPlumb(this.lastRemembered, current);
-    }
-    else {
-      this.jsPlumbInstance.reset();
-    }
-    this.lastRemembered = current;
-    this.souceClicked = !this.souceClicked;
-  }
-
-  connectSourceToTargetUsingJSPlumb(source: string, target: string) {
-    let labelName;
-    console.log("Connecting source " + source + "target " + target)
-    labelName = 'connection';     
-    this.jsPlumbInstance.connect({
-      connector: ['Flowchart', { stub: [212, 67], cornerRadius: 1, alwaysRespectStubs: true }],
-      source: 'jenkins-job-Pipeline',
-      target: 'jenkins-job-test',
-      anchor: ['Right', 'Left'],
-      overlays: [
-        ['Label', { label: labelName, location: 0.5, cssClass: 'connectingConnectorLabel' }]
-      ],
-    }); 
-  }
-
-  ngForRendred() {
-    console.log("Rendering...")
-    let labelName = 'connection';
-    this.jsPlumbInstance.connect({
-      connector: ['Flowchart', { stub: [212, 67], cornerRadius: 1, alwaysRespectStubs: true }],
-      source: 'jenkins-job-Pipeline',
-      target: 'jenkins-job-test',
-      anchor: ['Right', 'Left'],
-      overlays: [
-        ['Label', { label: labelName, location: 0.5, cssClass: 'connectingConnectorLabel' }]
-      ],
+  ngOnChanges() {
+    console.log("changes")
+    JSON.stringify
+    this.registeredJenkinsUrls.forEach(element => {
+      let data: Map<String, Array<JenkninsElement>> = new Map();
+      data.pus
     });
+  }
+
+  fillFromJson() {
+    const json = `{
+      "nodes":[
+        {"id":"Step_0 id: b46a17","top":0,"left":0},
+        {"id":"Step_1 id: efd2ce","top":200,"left":0}
+       
+      ],
+      "connections":[
+        {"uuids":["Step_0 id: b46a17_bottom","Step_1 id: efd2ce_top"]}
+      ]}`;
+    const data = JSON.parse(json);
+
+    this.nodes = data.nodes;
+    this.connections = data.connections;
+  }
+
+  yourMethod(item) {
+    console.log("Mladen" + item);
   }
 }

@@ -13,6 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { ViewJenkinsElementsComponent } from './view-jenkins-elements/view-jenkins-elements.component';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { PipelineCreatorComponent } from './pipeline-creator/pipeline-creator.component';
+import { NodesContainerComponent } from './pipeline-creator/nodes-container/nodes-container.component';
+import { NodeService } from './pipeline-creator/nodes-container/node/node.service';
+import { NodeComponent } from './pipeline-creator/nodes-container/node/node.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +25,8 @@ import { PipelineCreatorComponent } from './pipeline-creator/pipeline-creator.co
     AddJenkinsElementComponent,
     ViewJenkinsElementsComponent,
     PipelineCreatorComponent,
+    NodesContainerComponent,
+    NodeComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +37,10 @@ import { PipelineCreatorComponent } from './pipeline-creator/pipeline-creator.co
     FormsModule,
     MDBBootstrapModule.forRoot()
   ],
-  providers: [],
+  entryComponents: [
+    NodeComponent,
+  ],
+  providers: [NodeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

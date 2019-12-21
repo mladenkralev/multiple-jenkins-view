@@ -1,8 +1,15 @@
 <div class="jumbotron">
     <div class="container">
-        <div *ngFor="let jenkinsJob of piplineJobs;" id="div-jenkins-job-{{jenkinsJob.name}}">
+        <div style="margin: 10%;" class="row justify-content-md-center">
+            <div class="col" *ngFor="let jenkinsUrl of registeredJenkinsUrls" >
+                <nodes-container #nodeContainer [nodes]="nodes" [connections]="connections" (onCreate)="yourMethod(item)"></nodes-container>
+            </div>
+        </div>
+       
+        
+        <!-- <div *ngFor="let jenkinsJob of piplineJobs;" id="div-jenkins-job-{{jenkinsJob.name}}">
             <div class="row">
-                <div *ngFor="let jenkinsUrl of registeredJenkinsUrls" class="col"  >
+                <div #viewOnEvent *ngFor="let jenkinsUrl of registeredJenkinsUrls" class="col">
                     <div style="margin: 10%;" class="row justify-content-md-center">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body" [ngStyle]="jenkinsJob.color === 'green' && {'background-color':'green'} 
@@ -17,6 +24,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
+
+<button (click)="nodeContainer.addNode()">Create new node</button>

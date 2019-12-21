@@ -11,6 +11,11 @@ export class AppComponent {
     "http://localhost:8080/",
     "test",
     "test"
+  ),
+  new JenkninsElement(
+    "http://localhost:8081/",
+    "test",
+    "test"
   )]
 
   title = 'jenkins-promotion';
