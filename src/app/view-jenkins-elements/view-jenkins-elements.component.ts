@@ -11,10 +11,14 @@ import { JenkinsJob } from '../models/jenkins.job.element.model';
 export class ViewJenkinsElementsComponent implements OnInit {
   @Input() registeredJenkinsUrls: Array<JenkninsElement> = []
   // jenkins to jenkins jobs
-  jenkinsJobs = new Map<JenkninsElement, Array<JenkinsJob>>();
+  jenkinsToJenkinsJobs = new Map<JenkninsElement, Array<JenkinsJob>>();
+  jenkinsToSelectedJobs = new Map<JenkninsElement, Array<JenkinsJob>>();
+
+
+  // better to have them saved, not to iterate it on demand
   allJobs: Array<JenkinsJob> = []
   searchedJobs: Array<JenkinsJob> = []
-  piplineJobs: Array<JenkinsJob> = []
+
 
   addingJenkinsJobsView: boolean = true;
 
@@ -27,14 +31,16 @@ export class ViewJenkinsElementsComponent implements OnInit {
         let thisObject = this;
         promises.then(function (result) {
           let jobs: Array<JenkinsJob> = JSON.parse(JSON.stringify(result['jobs']))
-          thisObject.jenkinsJobs.set(element, jobs)
+          console.log("Jobs found are " + jobs)
+          thisObject.jenkinsToJenkinsJobs.set(element, jobs)
           thisObject.allJobs = thisObject.allJobs.concat(jobs)
+          // used for seaching
           thisObject.searchedJobs = thisObject.searchedJobs.concat(thisObject.allJobs)
         });
       } catch (err) {
         console.log(err)
       }
-      
+
     })
   }
 
@@ -74,7 +80,17 @@ export class ViewJenkinsElementsComponent implements OnInit {
   }
 
   addJobForPipeline(job: JenkinsJob) {
-    console.log(job)
-    this.piplineJobs.push(job)
+
+    // TODO we can haev duplicate elements!
+    // TODO optimize ?
+    for (let [jenkinsUrl, jenkinsJobs] of this.jenkinsToJenkinsJobs) {
+      console.log(jenkinsUrl, jenkinsJobs);
+      jenkinsJobs.forEach(interatorJob => {
+        if (interatorJob['name'] == job.name) {
+          // maybe new variable should be introduced
+          // this.jenkinsToSelectedJobs.set(jenkinsUrl, job)
+        }
+      });
+    }
   }
 }

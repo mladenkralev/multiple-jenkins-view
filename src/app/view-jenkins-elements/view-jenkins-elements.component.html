@@ -61,5 +61,4 @@
     </div>
 </div>
 
-<app-pipeline-creator *ngIf="!addingJenkinsJobsView" [registeredJenkinsUrls]="registeredJenkinsUrls"
-    [piplineJobs]="piplineJobs"></app-pipeline-creator>
+<app-pipeline-creator *ngIf="!addingJenkinsJobsView" [jenkinsToSelectedJenkinsJobs]="jenkinsToJenkinsJobs" ></app-pipeline-creator>

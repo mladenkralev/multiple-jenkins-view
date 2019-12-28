@@ -10,6 +10,9 @@ import { NodeService } from './nodes-container/node/node.service';
   styleUrls: ['./pipeline-creator.component.css']
 })
 export class PipelineCreatorComponent implements OnInit {
+  // these are only the selected jobs from previous view
+  @Input() jenkinsToSelectedJenkinsJobs = new Map<JenkninsElement, Array<JenkinsJob>>();
+  
   @Input() piplineJobs: Array<JenkinsJob> = []
   @Input() registeredJenkinsUrls: Array<JenkninsElement> = []
 
@@ -31,7 +34,7 @@ export class PipelineCreatorComponent implements OnInit {
     JSON.stringify
     this.registeredJenkinsUrls.forEach(element => {
       let data: Map<String, Array<JenkninsElement>> = new Map();
-      data.pus
+      // data.pus
     });
   }
 

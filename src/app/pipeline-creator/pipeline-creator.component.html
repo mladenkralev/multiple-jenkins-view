@@ -2,7 +2,7 @@
     <div class="container">
         <div style="margin: 10%;" class="row justify-content-md-center">
             <div class="col" *ngFor="let jenkinsUrl of registeredJenkinsUrls" >
-                <nodes-container #nodeContainer [nodes]="nodes" [connections]="connections" (onCreate)="yourMethod(item)"></nodes-container>
+                <nodes-container #nodeContainer [nodes]="nodes" [connections]="connections" ></nodes-container>
             </div>
         </div>
        
