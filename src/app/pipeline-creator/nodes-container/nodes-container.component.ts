@@ -21,6 +21,15 @@ export class NodesContainerComponent implements OnInit {
   ngOnInit() {
     this.nodeService.setRootViewContainerRef(this.viewContainerRef);
 
+    const container = this.viewContainerRef.element.nativeElement.parentNode;
+    const nodes = Array.from(container.querySelectorAll('.node')).map((node: HTMLDivElement) => {
+      return {
+        id: node.id,
+        top: node.offsetTop,
+        left: node.offsetLeft, 
+      }
+    });
+
     this.nodes.forEach(node => {
       this.nodeService.addDynamicNode(node);
     });
@@ -39,24 +48,4 @@ export class NodesContainerComponent implements OnInit {
     this.nodeService.addDynamicNode(node);
   }
 
-  saveNodeJson(){
-    //save element position on Canvas and node conections
-
-    const container = this.viewContainerRef.element.nativeElement.parentNode;
-    const nodes = Array.from(container.querySelectorAll('.node')).map((node: HTMLDivElement) => {
-      return {
-        id: node.id,
-        top: node.offsetTop,
-        left: node.offsetLeft, 
-      }
-    });
-
-    const connections = (this.nodeService.jsPlumbInstance.getAllConnections() as any[])
-        .map((conn) => ({ uuids: conn.getUuids() }));
-
-    const json = JSON.stringify({ nodes, connections });
-
-    console.log(json);
-  }
-  
 }

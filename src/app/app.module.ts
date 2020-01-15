@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
-import { AddJenkinsElementComponent } from './add-jenkins-element/add-jenkins-element.component';
+import { ManageJenkinsDomainsComponent } from './manage-jenkins-domains-component/manage-jenkins-domains-component';
 import { FormsModule } from '@angular/forms';
 import { ViewJenkinsElementsComponent } from './view-jenkins-elements/view-jenkins-elements.component';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
@@ -22,11 +22,11 @@ import { NodeComponent } from './pipeline-creator/nodes-container/node/node.comp
     AppComponent,
     JenkinsRestComponent,
     HeaderComponent,
-    AddJenkinsElementComponent,
+    ManageJenkinsDomainsComponent,
     ViewJenkinsElementsComponent,
     PipelineCreatorComponent,
     NodesContainerComponent,
-    NodeComponent
+    NodeComponent,
   ],
   imports: [
     BrowserModule,

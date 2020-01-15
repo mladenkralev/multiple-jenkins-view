@@ -4,11 +4,11 @@ import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { JenkninsElement } from '../models/jenkins.element.model';
 
 @Component({
-  selector: 'app-add-jenkins-element',
-  templateUrl: './add-jenkins-element.component.html',
-  styleUrls: ['./add-jenkins-element.component.css']
+  selector: 'app-manage-jenkins-element',
+  templateUrl: './manage-jenkins-domains.component.html',
+  styleUrls: ['./manage-jenkins-domains-component.css']
 })
-export class AddJenkinsElementComponent implements OnInit {
+export class ManageJenkinsDomainsComponent implements OnInit {
   inProcessOfAddingJenkinsView: boolean = false;
 
   @Output() jenkinsAdded: EventEmitter<JenkninsElement> = new EventEmitter<JenkninsElement>();

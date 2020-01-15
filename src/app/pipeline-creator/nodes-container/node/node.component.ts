@@ -45,6 +45,7 @@ export class NodeComponent implements AfterViewInit {
       dropOptions: exampleDropOptions
     };
     const { id } = this.node;
+    console.log("Adding node" + id)
     this.jsPlumbInstance.addEndpoint(id, { anchor: 'Bottom', uuid: id + '_bottom' }, Endpoint1);
     this.jsPlumbInstance.addEndpoint(id, { anchor: 'Top', uuid: id + '_top' }, Endpoint2);
     this.jsPlumbInstance.draggable(id);

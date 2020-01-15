@@ -1,31 +1,27 @@
 <div class="jumbotron">
-    <div class="container">
+    <!-- <div class="container">
         <div style="margin: 10%;" class="row justify-content-md-center">
-            <div class="col" *ngFor="let jenkinsUrl of registeredJenkinsUrls" >
-                <nodes-container #nodeContainer [nodes]="nodes" [connections]="connections" ></nodes-container>
+            <div class="col" style="background-color: black;"
+                *ngFor="let viawableContentIterator of viawableContent | keyvalue">
+                <nodes-container #nodeContainer [nodes]="getNodesFromJson(viawableContentIterator.value)">
+                </nodes-container>
+
+                <div [connections]="connections"/>
             </div>
         </div>
-       
-        
-        <!-- <div *ngFor="let jenkinsJob of piplineJobs;" id="div-jenkins-job-{{jenkinsJob.name}}">
-            <div class="row">
-                <div #viewOnEvent *ngFor="let jenkinsUrl of registeredJenkinsUrls" class="col">
-                    <div style="margin: 10%;" class="row justify-content-md-center">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body" [ngStyle]="jenkinsJob.color === 'green' && {'background-color':'green'} 
-                                        || jenkinsJob.color === 'red' && {'background-color':'yellow'} ||
-                                        jenkinsJob.color === 'notbuilt' && {'background-color':'silver'}"
-                                id="jenkins-job-{{jenkinsJob.name}}" (click)="showConnectOnClick($event)">
-                                <h5 class="card-title">Job name {{jenkinsJob.name}}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Job last build {{jenkinsJob.color}}</h6>
-                                <a href="{{jenkinsUrl.url}}" class="card-link">Job link</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
+    </div> -->
+    <div #mladen class="container text-center" *ngFor="let viawableContentIterator of viawableContent | keyvalue">
+        <nodes-container [nodes]="getNodesFromJson(viawableContentIterator.value)">
+        </nodes-container>
     </div>
 </div>
 
 <button (click)="nodeContainer.addNode()">Create new node</button>
+<div>
+    <a [href]="fileUrl" download="data.json" (click)="saveNodeJson()" class="btn btn-secondary btn-lg active"
+        role="button" aria-pressed="true">Save Flow Node JSON</a>
+</div>
+
+<div>
+    <button clasa="align-middle" (click)="fillFromJson()">Fill flow Node JSON</button>
+</div>
