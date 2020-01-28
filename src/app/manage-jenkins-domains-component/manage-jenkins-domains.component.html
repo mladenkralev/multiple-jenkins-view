@@ -1,10 +1,13 @@
-<div class="jumbotron" *ngIf="!inProcessOfAddingJenkinsView">
+<div class="jumbotron" *ngIf="(!inProcessOfAddingJenkinsView && !inProcessOfLoadingJenkinsView)">
     <h1 class="display-4">Multiple jenkins view</h1>
     <p class="lead">Manage multiple jenkins jobs withe multiple internal depndencies</p>
     <hr class="my-4">
     <p class="lead">
         <a class="btn btn-primary btn-lg" (click)="inProcessOfAddingJenkinsView=!inProcessOfAddingJenkinsView"
             role="button">Add Jenkins Domain</a>
+
+        <a class="btn btn-secondary btn-lg" (click)="inProcessOfLoadingJenkinsView=!inProcessOfLoadingJenkinsView"
+            role="button">Load Jenkins Domain</a>
     </p>
 </div>
 
@@ -22,8 +25,29 @@
         </div>
         <div class="form-group">
             <label for="passwordInput">Password</label>
-            <input name="password" type="password" class="form-control" id="passwordInput" placeholder="Password" ngModel>
+            <input name="password" type="password" class="form-control" id="passwordInput" placeholder="Password"
+                ngModel>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-secondary"
+            (click)="inProcessOfAddingJenkinsView=!inProcessOfAddingJenkinsView">Back</button>
     </form>
+</div>
+
+<div class="jumbotron" *ngIf="inProcessOfLoadingJenkinsView">
+    <div class="row">
+        <div class="col-3">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button type="submit" class="btn btn-secondary"
+                    (click)="inProcessOfLoadingJenkinsView=!inProcessOfLoadingJenkinsView">Back</button>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="file" aria-describedby="inputGroupFileAddon01"
+                        (change)="handleFileInput($event.target.files)">
+                    <label class="custom-file-label" for="inputGroupFile01">Load Configuration</label>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,7 +1,13 @@
 <app-header [jenkinsNumber]="registeredJenkinsUrls.length"></app-header>
 
-<app-manage-jenkins-element *ngIf="registeredJenkinsUrls.length == 0" (jenkinsAdded)="onJenkinsAdded($event)">
+<app-manage-jenkins-element *ngIf="(registeredJenkinsUrls.length == 0 &&  !loadedPreconfiguredJsonFile)"
+    (loadedJenkinsJson)="onLoadedPreconfiguredJson($event)"
+    (jenkinsAdded)="onJenkinsAdded($event)">
 </app-manage-jenkins-element>
 
 <app-view-jenkins-elements *ngIf="registeredJenkinsUrls.length > 0" [registeredJenkinsUrls]="registeredJenkinsUrls">
 </app-view-jenkins-elements>
+
+<app-pipeline-creator *ngIf="loadedPreconfiguredJsonFile" [loadedPreconfiguredJson]="json"></app-pipeline-creator>
+
+

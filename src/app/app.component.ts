@@ -7,21 +7,31 @@ import { JenkninsElement } from './models/jenkins.element.model'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  registeredJenkinsUrls: Array<JenkninsElement> = [new JenkninsElement(
-    "http://localhost:8080/",
-    "test",
-    "test"
-  ),
-  new JenkninsElement(
-    "http://localhost:8081/",
-    "test",
-    "test"
-  )]
+  registeredJenkinsUrls: Array<JenkninsElement> = [
+    // new JenkninsElement(
+    //   "http://localhost:8080/",
+    //   "test",
+    //   "test"
+    // ),
+    // new JenkninsElement(
+    //   "http://localhost:8081/",
+    //   "test",
+    //   "test"
+    // )
+  ]
+  
+  loadedPreconfiguredJsonFile: Boolean = false;
+  json: string;
 
   title = 'jenkins-promotion';
 
   onJenkinsAdded(event: JenkninsElement) {
-    console.log(event)
     this.registeredJenkinsUrls.push(event);
+  }
+
+  onLoadedPreconfiguredJson(event: any) {
+    this.loadedPreconfiguredJsonFile = !this.loadedPreconfiguredJsonFile
+    this.json = event;
+    console.log(this.json)
   }
 }

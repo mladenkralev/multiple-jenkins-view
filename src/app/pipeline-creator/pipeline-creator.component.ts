@@ -4,7 +4,7 @@ import { JenkninsElement } from '../models/jenkins.element.model'
 import { jsPlumbInstance } from 'jsplumb';
 import { NodeService } from './nodes-container/node/node.service';
 import { ViewableJenkinsNode } from '../models/jenkins.node.model';
-import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-pipeline-creator',
@@ -13,11 +13,12 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser
 })
 export class PipelineCreatorComponent implements OnInit {
   // these are only the selected jobs from previous view
-  @Input() jenkinsToSelectedJenkinsJobs = new Map<JenkninsElement, Array<JenkinsJob>>();
+  @Input() jenkinsToSelectedJenkinsJobs?= new Map<JenkninsElement, Array<JenkinsJob>>();
+  @Input() loadedPreconfiguredJson?: any
 
-  fileUrl;
+  @ViewChild('nodeContainerDiv', { read: ViewContainerRef, static: false }) viewContainerRef: ViewContainerRef;
 
-  @ViewChildren('viewOnEvent') things: QueryList<any>;
+  fileUrl: any;
 
   viawableContent = new Map<JenkninsElement, string>();
 
@@ -25,49 +26,49 @@ export class PipelineCreatorComponent implements OnInit {
   souceClicked: boolean = false;
   lastRemembered: string = ''
 
-  @ViewChild('mladen', { read: ViewContainerRef, static: false }) viewContainerRef: ViewContainerRef;
   nodes = [];
   connections = [];
 
   constructor(private nodeService: NodeService, private sanitizer: DomSanitizer) { }
 
-  // ngAfterViewInit(): void {
-  //   const container = this.viewContainerRef.nativeElement.parentNode;
-  //   console.log(container)
-  // }
-
   ngOnInit() {
-    // for now position 7 nodes and add new line.
-    var nodesOnRow = 0;
-    var nodesOnRowMax = 7;
-    console.log("changes")
+    if (this.loadedPreconfiguredJson != null) {
+      this.fillFromJson(this.loadedPreconfiguredJson)
+    } else {
+      // for now position 7 nodes and add new line.
+      var nodesOnRow = 0;
+      var nodesOnRowMax = 7;
 
-    var stepLeft = 100;
-    this.jenkinsToSelectedJenkinsJobs.forEach((jenkinsJobs, jenkinsDomain) => {
-      var stepTop = 300;
+      var stepLeft = 100;
+      this.jenkinsToSelectedJenkinsJobs.forEach((jenkinsJobs, jenkinsDomain) => {
+        var stepTop = 300;
+        let arrayOfNodes: Array<ViewableJenkinsNode> = new Array();
 
-      let arrayOfNodes: Array<ViewableJenkinsNode> = new Array();
-
-      jenkinsJobs.forEach(jenkinsJob => {
-        arrayOfNodes.push(new ViewableJenkinsNode(jenkinsJob.name, String(stepTop), String(stepLeft)));
-        if (nodesOnRow >= nodesOnRowMax) {
-          stepTop += 100;
-        }
-      })
-      const myObjStr = JSON.stringify({ nodes: arrayOfNodes });
-      this.viawableContent.set(jenkinsDomain, myObjStr)
-      stepLeft += 200;
-    });
+        jenkinsJobs.forEach(jenkinsJob => {
+          arrayOfNodes.push(new ViewableJenkinsNode(jenkinsJob.name, String(stepTop), String(stepLeft)));
+          if (nodesOnRow >= nodesOnRowMax) {
+            stepTop += 100;
+          }
+        })
+        const jsonNodes = JSON.stringify({ nodes: arrayOfNodes });
+        this.viawableContent.set(jenkinsDomain, jsonNodes)
+        stepLeft += 200;
+      });
+    }
 
     this.viawableContent.forEach((json, jenkinsElement) => {
       let tempArray = JSON.parse(json);
       console.log(tempArray)
       this.nodes = this.nodes.concat(tempArray.nodes)
     });
-
+    setTimeout(() => {
+      this.connections.forEach(connection => {
+        this.nodeService.addConnection(connection);
+      });
+    })
     console.log(this.nodes)
-  }
 
+  }
 
   getNodesFromJson(input) {
     return JSON.parse(input).nodes
@@ -78,7 +79,7 @@ export class PipelineCreatorComponent implements OnInit {
     const container = this.viewContainerRef.element.nativeElement.parentNode;
 
     const nodes = Array.from(container.querySelectorAll('.node')).map((node: HTMLDivElement) => {
-      return new ViewableJenkinsNode( node.id, String( node.offsetTop), String( node.offsetLeft))
+      return new ViewableJenkinsNode(node.id, String(node.offsetTop), String(node.offsetLeft))
     });
     const connections = (this.nodeService.jsPlumbInstance.getAllConnections() as any[])
       .map((conn) => ({ uuids: conn.getUuids() }));
@@ -88,12 +89,15 @@ export class PipelineCreatorComponent implements OnInit {
       var jenkinsDomain = null;
       this.viawableContent.forEach((json, jenkinsElement) => {
         const tempNodeJson = JSON.parse(json).nodes
-        if (tempNodeJson[0]["id"] === node.id) {
-          jenkinsDomain = jenkinsElement
-        }
+        tempNodeJson.forEach(jsonNode => {
+          if (jsonNode["id"] === node.id) {
+            jenkinsDomain = jenkinsElement
+          }
+        })
       });
+
       let jobName = node.id;
-      return ({jobName, jenkinsDomain});
+      return ({ jobName, jenkinsDomain });
     });
 
     const json = JSON.stringify({ nodes, connections, nodesToJenkinsDomains });
@@ -102,24 +106,52 @@ export class PipelineCreatorComponent implements OnInit {
     this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
   }
 
+  fillFromJson(json: string) {
+    console.log("Fling")
 
-  fillFromJson() {
-    
-    const data = JSON.parse(' {"nodes":[{"id":"test-jenkins-1","top":"300","left":"100"},{"id":"test-jenkins-2","top":"316","left":"1249"}],"connections":[{"uuids":["test-jenkins-1_bottom","test-jenkins-2_top"]}],"nodesToJenkinsDomains":[{"jobName":"test-jenkins-1","jenkinsDomain":{"url":"http://localhost:8080/","name":"test","password":"test"}},{"jobName":"test-jenkins-2","jenkinsDomain":{"url":"http://localhost:8081/","name":"test","password":"test"}}]}');
-   
-    this.nodes = data.nodes;
-    this.connections = data.connections;
+    this.nodes = json["nodes"];
+    this.connections = json["connections"];
+    let nodesToJenkinsDomains = json["nodesToJenkinsDomains"];
 
+    // let allKnownedJenkinsDomains= new Array<JenkninsElement>()
+    let tempViawableContent = new Map<JenkninsElement, Array<ViewableJenkinsNode>>();
+    nodesToJenkinsDomains.forEach(element => {
+      if (tempViawableContent.size != 0) {
+        let alreadyExists = Array.from(tempViawableContent.keys()).find(key => key['url'] === element['jenkinsDomain']['url']);
+        if (alreadyExists == undefined) {
+          tempViawableContent.set(new JenkninsElement(element['jenkinsDomain']['url'],
+            element['jenkinsDomain']["name"],
+            element['jenkinsDomain']["password"]), [])
+        }
+      } else {
+        tempViawableContent.set(new JenkninsElement(element['jenkinsDomain']['url'],
+          element['jenkinsDomain']["name"],
+          element['jenkinsDomain']["password"]), [])
+      }
 
-    this.nodes.forEach(node => {
-      this.nodeService.addDynamicNode(node);
-    })
+    });
 
-    setTimeout(() => {
-      this.connections.forEach(connection => {
-        this.nodeService.addConnection(connection);
-      });
-    })
-    console.log("Filling dude")
+    nodesToJenkinsDomains.forEach(element => {
+      let currentNode = this.nodes.find(node => node["id"] === element["jobName"]);
+      if (currentNode != undefined) {
+        let jenkinsDomain = Array.from(tempViawableContent.keys()).find(key => key['url'] === element['jenkinsDomain']['url']);
+        this.getByValue(tempViawableContent, jenkinsDomain).push(
+          new ViewableJenkinsNode(currentNode["id"],currentNode["top"], currentNode["left"]));
+      }
+    });
+
+    tempViawableContent.forEach((jenkinsNodes,jenkinsDomain) => {
+      const jsonNodes = JSON.stringify({ nodes: jenkinsNodes });
+      this.viawableContent.set(jenkinsDomain, jsonNodes)
+    });
+
+    console.log("End result is " + this.viawableContent)
+  }
+
+ getByValue(map, searchKey) {
+    for (let [key, value] of map.entries()) {
+      if (key === searchKey)
+        return value;
+    }
   }
 }

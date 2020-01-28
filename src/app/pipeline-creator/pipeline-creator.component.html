@@ -1,16 +1,6 @@
 <div class="jumbotron">
-    <!-- <div class="container">
-        <div style="margin: 10%;" class="row justify-content-md-center">
-            <div class="col" style="background-color: black;"
-                *ngFor="let viawableContentIterator of viawableContent | keyvalue">
-                <nodes-container #nodeContainer [nodes]="getNodesFromJson(viawableContentIterator.value)">
-                </nodes-container>
-
-                <div [connections]="connections"/>
-            </div>
-        </div>
-    </div> -->
-    <div #mladen class="container text-center" *ngFor="let viawableContentIterator of viawableContent | keyvalue">
+    <div #nodeContainerDiv class="container text-center"
+        *ngFor="let viawableContentIterator of viawableContent | keyvalue">
         <nodes-container [nodes]="getNodesFromJson(viawableContentIterator.value)">
         </nodes-container>
     </div>

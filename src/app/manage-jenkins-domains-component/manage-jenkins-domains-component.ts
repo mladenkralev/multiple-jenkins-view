@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, } from '@angular/core';
 import { NgForm, FormGroup, FormControl } from '@angular/forms';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { JenkninsElement } from '../models/jenkins.element.model';
@@ -10,8 +10,11 @@ import { JenkninsElement } from '../models/jenkins.element.model';
 })
 export class ManageJenkinsDomainsComponent implements OnInit {
   inProcessOfAddingJenkinsView: boolean = false;
-
   @Output() jenkinsAdded: EventEmitter<JenkninsElement> = new EventEmitter<JenkninsElement>();
+  @Output() loadedJenkinsJson: EventEmitter<JenkninsElement> = new EventEmitter<JenkninsElement>();
+
+  inProcessOfLoadingJenkinsView: boolean = false;
+  fileToUpload: File = null;
 
   constructor(private http: HttpClient) { }
 
@@ -54,4 +57,20 @@ export class ManageJenkinsDomainsComponent implements OnInit {
     return data;
   }
 
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+    
+    const fileReader = new FileReader();
+    fileReader.readAsText(this.fileToUpload, "UTF-8");
+    fileReader.onload = () => {
+      if (typeof fileReader.result === 'string') {
+        let tempResult = JSON.parse(fileReader.result);
+        console.log(tempResult)
+        this.loadedJenkinsJson.emit(tempResult)
+      }
+    }
+    fileReader.onerror = (error) => {
+      console.log(error);
+    }
+  }
 }
