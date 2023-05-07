@@ -32,7 +32,7 @@
     "jenkins-api-ts-typings": "^0.8.7",
     "jsplumb": "^2.12.8",
     "tslib": "^1.10.0",
-    "typed-rest-client": "^1.0.3",
+    "typed-rest-client": "^1.8.0",
     "xstate": "^4.7.2",
     "zone.js": "~0.9.1"
   },
